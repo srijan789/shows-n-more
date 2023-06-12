@@ -2,3 +2,7 @@ flask
 Flask-SQLAlchemy
 Flask-Migrate
 flask-restful
+flask-security-too
+Flask-Mail
+email_validator
+bcrypt

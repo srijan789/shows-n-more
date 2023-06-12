@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
+from flask_security import Security, SQLAlchemySessionUserDatastore, SQLAlchemyUserDatastore
 from application.database import db
 from application.config import LocalDevConfig
 from application.models import *
@@ -24,11 +25,18 @@ def create_app():
     db.init_app(app)
     api = Api(app)
     migrate = Migrate(app, db)
-
+    user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
+    security = Security(app, user_datastore)
     app.app_context().push()   
     return app, api
 
 app, api = create_app()
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # To-Do
+    pass
 
 api.add_resource(UserAPI, "/api/v1/user" "/api/v1/user/<int:id>")
 api.add_resource(ShowAPI, "/api/v1/show" "/api/v1/show/<int:id>")

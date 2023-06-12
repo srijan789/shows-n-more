@@ -1,10 +1,25 @@
 from .database import db
+from flask_security import UserMixin, RoleMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, autoincrement = True, primary_key = True)
     email = db.Column(db.String, unique = True, nullable = False)
     password = db.Column(db.String, nullable = False)
+    active = db.Column(db.Boolean())
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
+
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'role'
+    id = db.Column(db.Integer, autoincrement = True, primary_key = True)
+    name = db.Column(db.String(80), unique = True, nullable = False)
+    description = db.Column(db.String(255), nullable = True)
+
+class UserRole(db.Model):
+    __tablename__ = 'userrole'
+    id = db.Column(db.Integer, autoincrement = True, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable = False)
 
 class Show(db.Model):
     __tablename__ = 'show'
